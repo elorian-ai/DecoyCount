@@ -20,6 +20,9 @@ five `decoycount-v6-part-*.zip` files and `SHA256SUMS`. Cloning this repository 
 downloading GitHub's source-code ZIP does not download the images.
 Verify the ZIPs and extract all parts into the same new directory:
 
+Preparation also requires `rsvg-convert` for the SVG image; see the
+[evaluation setup](README.md#evaluate) for installation instructions.
+
 ```bash
 shasum -a 256 -c SHA256SUMS
 for part in decoycount-v6-part-*.zip; do unzip -n "$part" -d DecoyCount; done

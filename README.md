@@ -49,6 +49,9 @@ not distributed.
 Requires Python 3.10+. After extracting the ZIPs, the layout is
 `dataset/index.csv`, `dataset/tasks/Task-<id>/image/`, and optional `image_secondary/`.
 See [dataset format and limitations](DATASET.md).
+Install `rsvg-convert` for the SVG image before preparation: `brew install librsvg`
+on macOS, or `sudo apt-get install librsvg2-bin` on Ubuntu/Debian. HEIC support is
+provided by `pillow-heif` in `requirements.txt`.
 
 ```bash
 pip install -r requirements.txt
@@ -79,7 +82,6 @@ python -m unittest discover -s eval/harness -p 'test_*.py'
 ```
 
 Tests use synthetic images and a local mock API; they do not call paid providers.
-HEIC support uses `pillow-heif`; SVG preparation additionally requires `rsvg-convert`.
 
 ## Licensing and citation
 
