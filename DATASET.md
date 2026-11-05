@@ -1,14 +1,19 @@
 # Dataset format
 
-The benchmark contains 1,660 paired counting items; 842 have a second image.
-It is intended for evaluation, not training. See the [paper](https://arxiv.org/abs/2610.34855)
-for collection, taxonomy and experiments.
+The paper evaluated 1,660 paired counting items; 842 had a second image.
+The current candidate has **1,635 items and 823 secondary images** after contributor,
+privacy and source-related withdrawals. Historical paper scores are not reruns on
+this candidate. It is intended for evaluation, not training. See the
+[paper](https://arxiv.org/abs/2610.34855) for collection, taxonomy and experiments.
 
 The standalone evaluator accepts the canonical local delivery layout:
 
 ```text
-data/
+dataset/
   index.csv
+  ATTRIBUTION.csv
+  media_manifest.json
+  exclusions.json
   tasks/Task-<id>/image/<primary-file>
   tasks/Task-<id>/image_secondary/<optional-secondary-file>
 ```
@@ -23,6 +28,12 @@ data/
 `Task-<id>__secondary.jpg` at a maximum long side of 2,048 pixels. Only multi-hop
 receives the secondary image. The evaluator retains the legacy condition name
 `contextual`; the public name is **multi-hop**.
+
+The metadata files are included; the image folders are **not yet published**.
+`media_manifest.json` pins all 2,458 expected image files to their exact Git blob
+identifiers and sizes. `exclusions.json` records withdrawn tasks and retained blurs.
+Attribution v5 has exactly one row per task, with separate primary/secondary terms.
+See [release checks and remaining work](RELEASE.md).
 
 The planned Hugging Face release may use different column names; it must be
 materialized into this layout before using this evaluator. This initial code

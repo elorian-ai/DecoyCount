@@ -11,24 +11,29 @@ reasoning-alignment gap is cued minus neutral accuracy, in percentage points;
 it measures the improvement under a matched cue, not every source of reasoning error.
 
 This repository contains the standalone API evaluator, image preparation and scorer.
-Dataset publication is separate: the Hugging Face link is the release destination,
-not a claim that the complete download is already public. Images, consent records
-and historical model outputs are not included here.
+The [release candidate](dataset/) contains **1,635 tasks**, including neutral,
+alignment-cued and multi-hop prompts and answers, plus Attribution v5 and an image
+manifest. It excludes 25 tasks from the paper's 1,660-item bank and expects 823
+secondary images. **Images are not published yet:** recorded permissions still
+block the complete release. See [release status](RELEASE.md). The Hugging Face
+link is a destination, not confirmation of availability. Consent records and
+historical model outputs remain private.
 
 ## Evaluate
 
-Requires Python 3.10+. Once the release is available, obtain its canonical layout:
-`data/index.csv`, `data/tasks/Task-<id>/image/`, and optional `image_secondary/`.
+Requires Python 3.10+. Once images are released, their canonical layout will be
+`dataset/index.csv`, `dataset/tasks/Task-<id>/image/`, and optional `image_secondary/`.
 See [dataset format and limitations](DATASET.md).
 
 ```bash
 pip install -r requirements.txt
-python eval/harness/normalize_images.py --repo data --outdir images
+python eval/harness/check_release.py --repo dataset
+python eval/harness/normalize_images.py --repo dataset --outdir images
 
 # Supply your own OpenAI-compatible endpoint and credentials.
 export GATEWAY_BASE_URL=https://your-endpoint.example/v1
 export GATEWAY_API_KEY=your-key
-python eval/harness/run_counting.py --repo data --imgdir images \
+python eval/harness/run_counting.py --repo dataset --imgdir images \
   --models model=gateway:your-model --conditions neutral cued \
   --effort none --workers 4 --out results/my-run
 python eval/harness/score.py results/my-run --out results/my-run/scored.csv
