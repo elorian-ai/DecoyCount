@@ -16,7 +16,8 @@ def require(condition):
         raise ValueError('Inconsistent release metadata')
 
 
-def check(root, metadata_only=False):
+def check(root, metadata_only=False, media_only=False):
+    require(not (metadata_only and media_only))
     index = rows(root / 'index.csv')
     credits = rows(root / 'ATTRIBUTION.csv')
     manifest = json.loads((root / 'media_manifest.json').read_text())
@@ -51,7 +52,7 @@ def check(root, metadata_only=False):
         require(json.loads(row['signature_count']))
 
     issues = []
-    for row in credits:
+    for row in (() if media_only else credits):
         task = row['item_id'].replace('Task ', 'Task-', 1)
         for prefix in ('', 'second_') if task in secondary else ('',):
             if row[prefix + 'redistribution_allowed'].strip().upper() != 'TRUE':
@@ -71,7 +72,8 @@ def check(root, metadata_only=False):
                 continue
             data = path.read_bytes()
             blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
-            if blob != entry['git_blob'] or len(data) != entry['bytes']:
+            if (blob != entry['git_blob'] or len(data) != entry['bytes']
+                    or hashlib.sha256(data).hexdigest() != entry['sha256']):
                 issues.append(f'changed image: {entry["path"]}')
     return issues
 
@@ -79,9 +81,12 @@ def check(root, metadata_only=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[2] / 'dataset')
-    parser.add_argument('--metadata-only', action='store_true', help='Check metadata, not media readiness')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--metadata-only', action='store_true', help='Check metadata, not media readiness')
+    mode.add_argument('--media-only', action='store_true', help='Verify image identity, not permission clearance')
     args = parser.parse_args()
-    problems = check(args.repo, args.metadata_only)
-    print(f'{"METADATA ONLY" if args.metadata_only else "FULL RELEASE"}: {len(problems)} unresolved checks')
+    problems = check(args.repo, args.metadata_only, args.media_only)
+    label = 'METADATA ONLY' if args.metadata_only else 'MEDIA ONLY' if args.media_only else 'FULL RELEASE'
+    print(f'{label}: {len(problems)} unresolved checks')
     print('\n'.join(problems[:20]))
     raise SystemExit(bool(problems) and not args.metadata_only)

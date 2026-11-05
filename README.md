@@ -11,23 +11,28 @@ reasoning-alignment gap is cued minus neutral accuracy, in percentage points;
 it measures the improvement under a matched cue, not every source of reasoning error.
 
 This repository contains the standalone API evaluator, image preparation and scorer.
-The [release candidate](dataset/) contains **1,635 tasks**, including neutral,
+The [release candidate](dataset/) contains **1,586 tasks**, including neutral,
 alignment-cued and multi-hop prompts and answers, plus Attribution v5 and an image
-manifest. It excludes 25 tasks from the paper's 1,660-item bank and expects 823
-secondary images. **Images are not published yet:** recorded permissions still
-block the complete release. See [release status](RELEASE.md). The Hugging Face
-link is a destination, not confirmation of availability. Consent records and
-historical model outputs remain private.
+manifest. Attribution v6 permits every included primary and secondary image;
+49 tasks with an unpermitted image are excluded, in addition to 25 earlier
+withdrawals. The [media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview)
+packages **1,586 primary and 783 secondary images** in split ZIP downloads.
+AI-generated images are retained where v6 permits them. Five primary records
+still have incomplete licence/credit fields; inclusion is not blanket rights
+clearance. See
+[release status and download instructions](RELEASE.md). The Hugging Face link is
+a destination, not confirmation of availability. Consent records and historical
+model outputs remain private.
 
 ## Evaluate
 
-Requires Python 3.10+. Once images are released, their canonical layout will be
+Requires Python 3.10+. Extract all ZIP parts into the same directory; their layout is
 `dataset/index.csv`, `dataset/tasks/Task-<id>/image/`, and optional `image_secondary/`.
 See [dataset format and limitations](DATASET.md).
 
 ```bash
 pip install -r requirements.txt
-python eval/harness/check_release.py --repo dataset
+python eval/harness/check_release.py --repo dataset --media-only
 python eval/harness/normalize_images.py --repo dataset --outdir images
 
 # Supply your own OpenAI-compatible endpoint and credentials.
@@ -41,6 +46,8 @@ python eval/harness/score.py results/my-run --out results/my-run/scored.csv
 
 Use `--conditions contextual` for multi-hop (`contextual` is the legacy CLI name).
 Known potentially stale derived answers require care; see [limitations](DATASET.md#limitations).
+The media-only check verifies files and metadata, not permission clearance. The
+default full check also reports the unresolved attribution flags.
 Run `--list-providers` for other configured providers; endpoint compatibility varies.
 Use a new output directory for each model/configuration; an existing directory resumes a run.
 

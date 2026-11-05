@@ -1,36 +1,57 @@
 # Dataset release status
 
-**Draft: metadata complete, images not published.** This is not a runnable full
-dataset release yet.
+The v6 preview contains **1,586 tasks, 2,108 decoys and 2,369 original images**
+(1,586 primary + 783 secondary), with all three prompt conditions and answers.
+It is pinned to source revision `14c697748c0ef660ee332fa0d3e685ed80df13a9`.
 
-The candidate is pinned to source revision
-`29932f05513a1b53e192ab9b18e538a442835a88` and Attribution v5:
+Every included primary and secondary image has a TRUE permission flag in
+Attribution v6. AI-generated images are retained where v6 permits them. Whole
+tasks are excluded if either supplied image has a FALSE flag: 31 primary failures
+and 22 secondary failures overlap in four tasks, yielding **49 exclusions** from
+the 1,635-task candidate. With 25 earlier withdrawals, 74 of the paper's original
+1,660 tasks are excluded. All prompt conditions use the same retained task list.
 
-- 1,635 tasks with neutral, alignment-cued and multi-hop prompts and answers.
-- 1,635 primary and 823 secondary images expected; exact filenames, byte counts
-  and Git blob identifiers are in `dataset/media_manifest.json`.
-- 25 withdrawn tasks excluded from all conditions; 13 secondary-only blurred
-  images retained with exact reviewed bytes pinned.
+## Download
 
-## Before publishing images
-
-1. Reconcile v5's **74 primary and 87 secondary FALSE redistribution records**.
-   These include explicit copyrighted/not-releasable records as well as AI-origin
-   flags. Obtain corrected item-level permission decisions, not a blanket override.
-2. Confirm the annotation licence and retain each image's individual terms,
-   credits and modification notices. Code remains MIT; it does not license data.
-3. Export only the manifest's image files into `dataset/tasks/`. Do not copy source
-   Git history, original delivery JSON, old attribution versions, or consent logs.
-4. Run the full checker, normalize every image without errors, and test a clean
-   download through the evaluator for all three conditions. Current tests cover
-   metadata and a synthetic mock-API run, not the unavailable release images.
+Download every `decoycount-v6-part-*.zip` and `SHA256SUMS` from the
+[media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview).
+Verify the ZIPs and extract all parts into the same new directory:
 
 ```bash
-# Metadata integrity only; prints permission blockers but does not certify release.
+shasum -a 256 -c SHA256SUMS
+for part in decoycount-v6-part-*.zip; do unzip -n "$part" -d DecoyCount; done
+cd DecoyCount
+pip install -r requirements.txt
+python eval/harness/check_release.py --media-only
+python eval/harness/normalize_images.py --repo dataset --outdir images
+```
+
+Part 1 includes metadata, attribution, evaluator code and documentation. Other
+parts contain additional original image files. No private Git history, consent
+logs, historical delivery JSON or excluded images are included. The 13 retained
+secondary-only blurred images match their pinned source bytes exactly.
+Uncompressed media total approximately 3.9 GB.
+
+## Remaining metadata limitations
+
+Permission flags do not replace the source terms. Five primary-image records
+remain incomplete in v6:
+
+- `Task-8e9023cc`, `Task-g3r1852f`, `Task-uv3f64bc`: missing source licence.
+- `Task-oa0b0094`: missing credit text (explicitly fully AI-generated).
+- `Task-r3o1f791`: missing source licence and credit text.
+
+Those source values are preserved; this preview does not certify their completeness
+or grant blanket rights. Confirm the annotation licence separately. MIT covers
+evaluator code only; individual image terms remain in `dataset/ATTRIBUTION.csv`.
+
+```bash
+# Membership, prompt and attribution checks; reports incomplete source fields.
 python eval/harness/check_release.py --metadata-only
-# Fails until image files and recorded permissions are complete.
+# Also checks images and permission metadata; incomplete fields still fail.
 python eval/harness/check_release.py
 ```
 
-Do not use the paper's 1,660-item scores as results on this edited candidate.
-Multi-hop answer-quality limitations remain documented in [DATASET.md](DATASET.md#limitations).
+Historical scores apply to the paper's original 1,660-item bank, not this edited
+candidate. Multi-hop answer-quality limitations remain documented in
+[DATASET.md](DATASET.md#limitations).
