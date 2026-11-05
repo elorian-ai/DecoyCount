@@ -2,31 +2,51 @@
 
 **Evaluating Visual-Reasoning Misalignment in Counting**
 
-[Paper](https://arxiv.org/abs/2610.34855) · [PDF](https://arxiv.org/pdf/2610.34855) · [Dataset](https://huggingface.co/datasets/elorian-ai/DecoyCount)
+[Paper](https://arxiv.org/abs/2610.34855) · [PDF](https://arxiv.org/pdf/2610.34855) · [Download images](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview)
 
-DecoyCount pairs 1,660 real-world counting items with pre-registered decoys and three
+The current DecoyCount v6 release pairs **1,586 counting tasks** with pre-registered decoys and three
 prompt conditions: **neutral**, **alignment-cued**, and **multi-hop**. The multi-hop
 condition adds scenario context and, where applicable, a second image. The
 reasoning-alignment gap is cued minus neutral accuracy, in percentage points;
 it measures the improvement under a matched cue, not every source of reasoning error.
 
-This repository contains the standalone API evaluator, image preparation and scorer.
-The [release candidate](dataset/) contains **1,586 tasks**, including neutral,
-alignment-cued and multi-hop prompts and answers, plus Attribution v5 and an image
-manifest. Attribution v6 permits every included primary and secondary image;
-49 tasks with an unpermitted image are excluded, in addition to 25 earlier
-withdrawals. The [media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview)
-packages **1,586 primary and 783 secondary images** in split ZIP downloads.
+The **v6 media preview** contains **2,108 decoys and 2,369 images**
+(1,586 primary + 783 secondary), with prompts and answers for all three conditions.
+The paper evaluated an earlier 1,660-task bank; its results are not scores on this
+edited release. Selection and remaining limitations are in [RELEASE.md](RELEASE.md).
+
+## Download the dataset
+
+**The images are in these five ZIP files—not in Git's `dataset/` directory or
+GitHub's automatic source-code ZIP. Download all five parts:**
+
+[Part 1](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/decoycount-v6-part-01.zip) ·
+[Part 2](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/decoycount-v6-part-02.zip) ·
+[Part 3](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/decoycount-v6-part-03.zip) ·
+[Part 4](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/decoycount-v6-part-04.zip) ·
+[Part 5](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/decoycount-v6-part-05.zip) ·
+[SHA256SUMS](https://github.com/elorian-ai/DecoyCount/releases/download/v6-media-preview/SHA256SUMS)
+
+Approximately 3.9 GB total. Part 1 also contains the evaluator, prompts, answers,
+Attribution v6 and manifests; the other parts contain additional individual image
+files. Save all downloads together, verify them and extract into one new directory:
+
+```bash
+shasum -a 256 -c SHA256SUMS
+for part in decoycount-v6-part-*.zip; do unzip -n "$part" -d DecoyCount; done
+cd DecoyCount
+```
+
+Only tasks with TRUE permission flags for every supplied image are included;
 AI-generated images are retained where v6 permits them. Five primary records
-still have incomplete licence/credit fields; inclusion is not blanket rights
-clearance. See
-[release status and download instructions](RELEASE.md). The Hugging Face link is
-a destination, not confirmation of availability. Consent records and historical
-model outputs remain private.
+still have incomplete licence/credit fields. See [data terms](DATA_LICENSE.md)
+and [known limitations](RELEASE.md#remaining-metadata-limitations); publication is
+not blanket rights clearance. Private consent records and historical outputs are
+not distributed.
 
 ## Evaluate
 
-Requires Python 3.10+. Extract all ZIP parts into the same directory; their layout is
+Requires Python 3.10+. After extracting the ZIPs, the layout is
 `dataset/index.csv`, `dataset/tasks/Task-<id>/image/`, and optional `image_secondary/`.
 See [dataset format and limitations](DATASET.md).
 
@@ -47,7 +67,8 @@ python eval/harness/score.py results/my-run --out results/my-run/scored.csv
 Use `--conditions contextual` for multi-hop (`contextual` is the legacy CLI name).
 Known potentially stale derived answers require care; see [limitations](DATASET.md#limitations).
 The media-only check verifies files and metadata, not permission clearance. The
-default full check also reports the unresolved attribution flags.
+default full check also reports the incomplete licence/credit fields; no retained
+image has a FALSE permission flag.
 Run `--list-providers` for other configured providers; endpoint compatibility varies.
 Use a new output directory for each model/configuration; an existing directory resumes a run.
 

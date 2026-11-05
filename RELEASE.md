@@ -13,8 +13,11 @@ the 1,635-task candidate. With 25 earlier withdrawals, 74 of the paper's origina
 
 ## Download
 
-Download every `decoycount-v6-part-*.zip` and `SHA256SUMS` from the
-[media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview).
+The ZIPs are uploaded and publicly downloadable from the
+[media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview);
+the [README](README.md#download-the-dataset) links each part directly. Download all
+five `decoycount-v6-part-*.zip` files and `SHA256SUMS`. Cloning this repository or
+downloading GitHub's source-code ZIP does not download the images.
 Verify the ZIPs and extract all parts into the same new directory:
 
 ```bash
@@ -31,6 +34,9 @@ parts contain additional original image files. No private Git history, consent
 logs, historical delivery JSON or excluded images are included. The 13 retained
 secondary-only blurred images match their pinned source bytes exactly.
 Uncompressed media total approximately 3.9 GB.
+
+The archives are a fixed evaluator/data snapshot. Later documentation corrections
+live in this repository; they do not change the image bytes or archive checksums.
 
 ## Remaining metadata limitations
 
