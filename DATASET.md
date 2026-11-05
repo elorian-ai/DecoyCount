@@ -38,9 +38,10 @@ The filtered Attribution v6 has exactly one row per included task, with separate
 primary/secondary terms. No retained image has a FALSE permission flag; source
 metadata is not silently repaired. See [release checks and remaining work](RELEASE.md).
 
-The planned Hugging Face release may use different column names; it must be
-materialized into this layout before using this evaluator. This initial code
-release does not include a Hugging Face-to-local conversion tool or the media.
+The [README download section](README.md#download-the-dataset) links all five ZIP
+parts directly. A Git clone or GitHub source-code ZIP contains metadata and code,
+not the image files. The published media packages already use the canonical layout
+above; no Hugging Face conversion or private S3 access is required.
 
 ## Metrics
 
@@ -64,5 +65,5 @@ Alignment cues may also disambiguate a question; a positive gap does not uniquel
 isolate every reasoning failure. Decoy families can overlap. The benchmark is
 selected to expose counting errors rather than represent their natural prevalence.
 
-Data availability and per-image terms are tracked separately from this code release;
-see [data licensing](DATA_LICENSE.md).
+See [data licensing](DATA_LICENSE.md) for per-image terms and the remaining
+attribution limitations.

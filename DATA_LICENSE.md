@@ -7,10 +7,10 @@ separately in the linked preview packages. It does not grant a blanket image lic
 
 Images retain their original per-image terms, including CC BY, CC BY-SA and
 public-domain material, alongside commissioned content whose permissions must
-be documented. The release must include its attribution manifest: task ID,
+be documented. The release includes its [v6 attribution manifest](dataset/ATTRIBUTION.csv): task ID,
 image role, original source, author, licence/version, credit and modification
 notice. Source URLs alone are not a substitute for that record. A collection-level
-licence for annotations must be stated separately when confirmed. The current
+licence for annotations remains unconfirmed. The current
 [Attribution v6](dataset/ATTRIBUTION.csv) is a source record, not blanket clearance.
 Only tasks with TRUE permission flags for every supplied image are included.
 The 49 tasks failing that rule are withheld as complete tasks, not released with
