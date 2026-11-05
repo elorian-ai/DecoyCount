@@ -1,14 +1,20 @@
 # Dataset format
 
-The benchmark contains 1,660 paired counting items; 842 have a second image.
-It is intended for evaluation, not training. See the [paper](https://arxiv.org/abs/2610.34855)
-for collection, taxonomy and experiments.
+The paper evaluated 1,660 paired counting items; 842 had a second image.
+The current candidate has **1,586 items, 2,108 decoys and 783 secondary images**.
+It excludes 25 contributor/privacy/source withdrawals and another 49 tasks for
+which v6 does not permit every supplied image. Historical paper scores are not reruns on
+this candidate. It is intended for evaluation, not training. See the
+[paper](https://arxiv.org/abs/2610.34855) for collection, taxonomy and experiments.
 
 The standalone evaluator accepts the canonical local delivery layout:
 
 ```text
-data/
+dataset/
   index.csv
+  ATTRIBUTION.csv
+  media_manifest.json
+  exclusions.json
   tasks/Task-<id>/image/<primary-file>
   tasks/Task-<id>/image_secondary/<optional-secondary-file>
 ```
@@ -23,6 +29,14 @@ data/
 `Task-<id>__secondary.jpg` at a maximum long side of 2,048 pixels. Only multi-hop
 receives the secondary image. The evaluator retains the legacy condition name
 `contextual`; the public name is **multi-hop**.
+
+The metadata files are included in Git; image folders are packaged separately in
+the [media preview](https://github.com/elorian-ai/DecoyCount/releases/tag/v6-media-preview).
+`media_manifest.json` pins all 2,369 image files by SHA-256, Git blob identifier and
+size. `exclusions.json` records all 74 excluded tasks and the retained blurs.
+The filtered Attribution v6 has exactly one row per included task, with separate
+primary/secondary terms. No retained image has a FALSE permission flag; source
+metadata is not silently repaired. See [release checks and remaining work](RELEASE.md).
 
 The planned Hugging Face release may use different column names; it must be
 materialized into this layout before using this evaluator. This initial code
