@@ -21,7 +21,8 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn('Task-42zn064e', excluded, 'A secondary-image failure excludes the task')
 
     def test_full_release_cannot_pass_without_images(self):
-        self.assertTrue(any('missing or symlinked image' in item for item in check(ROOT)))
+        with patch('check_release.Path.is_file', return_value=False):
+            self.assertTrue(any('missing or symlinked image' in item for item in check(ROOT)))
 
     def test_media_mode_does_not_override_attribution(self):
         self.assertFalse(any('redistribution' in item for item in check(ROOT, media_only=True)))
